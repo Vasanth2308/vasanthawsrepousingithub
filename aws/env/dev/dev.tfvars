@@ -14,6 +14,6 @@ private_subnet_cidrs = [
 private_subnet_azs = [
   "us-east-1b","us-east-1c"
 ]
-# instance_type    = "t2.medium"
-# root_volume_size = 20
+instance_type    = "t2.micro"
+root_volume_size = 20
 
