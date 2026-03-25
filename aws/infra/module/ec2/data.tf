@@ -21,10 +21,10 @@ data "aws_ami" "amazon_linux_2" {
 # Data — Auto-detect caller's public IP for SG
 ################################################################################
 
-data "http" "my_public_ip" {
-  url = "https://checkip.amazonaws.com"
-}
+# data "http" "my_public_ip" {
+#   url = "https://checkip.amazonaws.com"
+# }
 
-locals {
-  my_public_ip = "${chomp(data.http.my_public_ip.response_body)}/32"
-}
+# locals {
+#   my_public_ip = "${chomp(data.http.my_public_ip.response_body)}/32"
+# }
