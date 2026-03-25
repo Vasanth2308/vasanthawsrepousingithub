@@ -5,3 +5,7 @@ public_subnet_cidr = "10.0.1.0/24"
 az                 = "us-east-1a"
 environment  = "dev"
 project_name = "vasanth-aws"
+owner            = "vasanth"
+instance_type    = "t2.micro"
+root_volume_size = 20
+

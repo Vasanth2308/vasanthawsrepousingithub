@@ -19,3 +19,24 @@ variable "project_name" {
   type        = string
   default     = "vasanth-aws"
 }
+
+variable "instance_type" {
+  description = "EC2 instance type"
+  type        = string
+}
+
+variable "root_volume_size" {
+  description = "Root EBS volume size in GB"
+  type        = number
+}
+
+variable "public_key" {
+  description = "SSH public key for EC2 key pair"
+  type        = string
+  sensitive   = true
+}
+
+variable "owner" {
+  description = "Team or person who owns this environment"
+  type        = string
+}

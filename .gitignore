@@ -34,3 +34,15 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+ssh -i infra/module/ec2/generated/vasanth-aws-dev.pem ec2-user@YOUR_ELASTIC_IP
+```
+
+---
+
+## Important — add to `.gitignore`
+
+The `.pem` file is your **private key** — never push it to GitHub. The updated `.gitignore` already covers this:
+```
+infra/module/ec2/generated/
+*.pem
