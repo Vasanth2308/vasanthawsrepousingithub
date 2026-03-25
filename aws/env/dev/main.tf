@@ -29,7 +29,7 @@ module "vpc" {
 # Local — common tags applied to every module
 ################################################################################
 module "rds" {
-  source = "../../infra_module/rds"
+  source = "../../infra/module/rds"
 
   db_identifier = "dev-rds-db"
   db_name       = "devdb"
