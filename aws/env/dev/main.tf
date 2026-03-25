@@ -21,7 +21,7 @@ module "ec2" {
   root_volume_size = var.root_volume_size
   tags             = local.common_tags
   vpc_id           = module.vpc.vpc_id
-  public_subnet_id = module.vpc.public_subnet_id
+  public_subnet_id = module.vpc.subnet_id
 }
 
 ################################################################################
