@@ -38,7 +38,7 @@ module "rds" {
   db_username   = "admin"
 
   subnet_ids = module.vpc.private_subnet_ids
-  vpc_security_group_ids = [module.ec2.sg_id]
+  vpc_security_group_ids = []
 }
 
 locals {
