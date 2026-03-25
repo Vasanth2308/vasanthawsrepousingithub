@@ -6,6 +6,6 @@ az                 = "us-east-1a"
 environment  = "dev"
 project_name = "vasanth-aws"
 owner            = "vasanth"
-instance_type    = "t2.medium"
-root_volume_size = 20
+# instance_type    = "t2.medium"
+# root_volume_size = 20
 

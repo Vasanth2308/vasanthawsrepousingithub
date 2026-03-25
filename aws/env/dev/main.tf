@@ -11,23 +11,33 @@ module "vpc" {
 # EC2 Module
 ################################################################################
 
-module "ec2" {
-  source = "../../infra/module/ec2"
+# module "ec2" {
+#   source = "../../infra/module/ec2"
 
-  project_name     = var.project_name
-  environment      = var.environment
-  instance_type    = var.instance_type
-  root_volume_size = var.root_volume_size
-  tags             = local.common_tags
+#   project_name     = var.project_name
+#   environment      = var.environment
+#   instance_type    = var.instance_type
+#   root_volume_size = var.root_volume_size
+#   tags             = local.common_tags
 
-  # Passed directly from VPC module — no hardcoding
-  vpc_id           = module.vpc.vpc_id
-  subnet_id        = module.vpc.subnet_id
-}
+#   # Passed directly from VPC module — no hardcoding
+#   vpc_id           = module.vpc.vpc_id
+#   subnet_id        = module.vpc.subnet_id
+# }
 
 ################################################################################
 # Local — common tags applied to every module
 ################################################################################
+module "rds" {
+  source = "../../infra_module/rds"
+
+  db_identifier = "dev-rds-db"
+  db_name       = "devdb"
+  db_username   = "admin"
+
+  subnet_ids = module.vpc.private_subnet_ids
+  vpc_security_group_ids = [module.ec2.sg_id]
+}
 
 locals {
   common_tags = {
