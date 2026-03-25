@@ -8,20 +8,29 @@ on:
         required: true
 
 env:
-  TF_WORKING_DIR: ./aws/env/dev
+  TF_WORKING_DIR: ./aws/env/dev   # ⚠️ we will validate this using debug
   TF_VAR_FILE: dev.tfvars
 
 jobs:
   destroy:
     name: "Terraform Destroy"
     runs-on: ubuntu-latest
-    environment: dev-approval   # approval required
-
-    defaults:
-      run:
-        working-directory: ${{ env.TF_WORKING_DIR }}
+    environment: dev-approval
 
     steps:
+      # ✅ STEP 1: Checkout FIRST (no working-directory before this)
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # ✅ STEP 2: DEBUG (NEWLY ADDED)
+      - name: Debug Repo Structure   # ⭐ NEW STEP
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Repo structure:"
+          ls -R
+
+      # ✅ STEP 3: Validate input
       - name: Validate Input
         run: |
           if [ "${{ github.event.inputs.confirm_destroy }}" != "DESTROY" ]; then
@@ -30,34 +39,40 @@ jobs:
           fi
           echo "✅ Confirmed"
 
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
+      # ✅ STEP 4: AWS Config
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region:            us-east-1  # safer to hardcode
+          aws-region:            us-east-1
 
+      # ✅ STEP 5: Terraform Setup
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.7.0
 
+      # ✅ STEP 6: Terraform Init (WITH working-directory)
       - name: Terraform Init
+        working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform init
 
+      # ✅ STEP 7: Destroy Plan
       - name: Terraform Destroy Plan
+        working-directory: ${{ env.TF_WORKING_DIR }}
         run: |
           terraform plan \
             -destroy \
             -var-file="${{ env.TF_VAR_FILE }}" \
             -out=tfdestroy
 
+      # ✅ STEP 8: Destroy Apply
       - name: Terraform Destroy Apply
+        working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform apply -auto-approve tfdestroy
 
+      # ✅ STEP 9: Summary
       - name: Summary
         run: |
           echo "## 💥 Destroy Completed" >> $GITHUB_STEP_SUMMARY
