@@ -1,0 +1,65 @@
+name: Terraform Destroy - DEV
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_destroy:
+        description: "Type DESTROY to confirm"
+        required: true
+
+env:
+  TF_WORKING_DIR: ./aws/env/dev
+  TF_VAR_FILE: dev.tfvars
+
+jobs:
+  destroy:
+    name: "Terraform Destroy"
+    runs-on: ubuntu-latest
+    environment: dev-approval   # approval required
+
+    defaults:
+      run:
+        working-directory: ${{ env.TF_WORKING_DIR }}
+
+    steps:
+      - name: Validate Input
+        run: |
+          if [ "${{ github.event.inputs.confirm_destroy }}" != "DESTROY" ]; then
+            echo "❌ You must type DESTROY"
+            exit 1
+          fi
+          echo "✅ Confirmed"
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region:            ap-south-1   # safer to hardcode
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.7.0
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Destroy Plan
+        run: |
+          terraform plan \
+            -destroy \
+            -var-file="${{ env.TF_VAR_FILE }}" \
+            -out=tfdestroy
+
+      - name: Terraform Destroy Apply
+        run: terraform apply -auto-approve tfdestroy
+
+      - name: Summary
+        run: |
+          echo "## 💥 Destroy Completed" >> $GITHUB_STEP_SUMMARY
+          echo "- Environment: DEV" >> $GITHUB_STEP_SUMMARY
+          echo "- Triggered by: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
