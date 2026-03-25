@@ -30,12 +30,6 @@ variable "root_volume_size" {
   type        = number
 }
 
-variable "public_key" {
-  description = "SSH public key for EC2 key pair"
-  type        = string
-  sensitive   = true
-}
-
 variable "owner" {
   description = "Team or person who owns this environment"
   type        = string
