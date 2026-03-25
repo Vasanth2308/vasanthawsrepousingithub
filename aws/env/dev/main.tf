@@ -5,6 +5,8 @@ module "vpc" {
   vpc_name           = var.vpc_name
   public_subnet_cidr = var.public_subnet_cidr
   az                 = var.az
+  private_subnet_cidrs = var.private_subnet_cidrs
+  private_subnet_azs   = var.private_subnet_azs
 }
 
 ################################################################################

@@ -34,3 +34,9 @@ variable "owner" {
   description = "Team or person who owns this environment"
   type        = string
 }
+variable "private_subnet_cidrs" {
+  type = list(string)
+}
+variable "private_subnet_azs" {
+  type = list(string)
+}
