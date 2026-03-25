@@ -13,8 +13,8 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "public_subnet_id" {
-  description = "Public subnet ID from vpc module output"
+variable "subnet_id" {
+  description = "Subnet ID — from vpc module output 'subnet_id'"   # ✅ matches output name
   type        = string
 }
 
