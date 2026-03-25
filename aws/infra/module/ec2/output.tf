@@ -33,10 +33,6 @@ output "pem_file_path" {
   value       = "infra/module/ec2/generated/${var.project_name}-${var.environment}.pem"
 }
 
-output "sg_id" {
-  value = aws_security_group.ec2_sg.id
-}
-
 # # output "deployer_ip_in_sg" {
 # #   description = "Your public IP auto-added to the security group"
 # #   value       = local.my_public_ip
