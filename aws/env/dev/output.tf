@@ -24,7 +24,7 @@ output "ssh_command" {
   value       = module.ec2.ssh_command
 }
 
-output "deployer_ip_in_sg" {
-  description = "Your IP auto-added to security group"
-  value       = module.ec2.deployer_ip_in_sg
-}
+# output "deployer_ip_in_sg" {
+#   description = "Your IP auto-added to security group"
+#   value       = module.ec2.deployer_ip_in_sg
+# }
