@@ -1,0 +1,33 @@
+name: Terraform State Recovery
+
+on:
+  workflow_dispatch:   # manual trigger
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region:            ${{ secrets.AWS_REGION }}a
+
+      - name: Download Previous State from S3
+        run: |
+          aws s3api get-object \
+            --bucket vasanth-backend-bucket-s3 \
+            --key dev.tfstate \
+            --version-id HQdvE0x8FuU7_qN9J7.Xg0TeU7GxOdPX \
+            terraform.tfstate
+
+      - name: Terraform Init (connect backend)
+        run: terraform init
+
+      - name: Push recovered state to S3
+        run: terraform state push terraform.tfstate
